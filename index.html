@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GamerClass | Sistema Interclasses Pro</title>
+    <link rel="stylesheet" href="style/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="logo">
+                <i class="fas fa-gamepad"></i>
+                <span>GamerClass</span>
+            </div>
+            <nav id="sidebar-nav">
+                <ul>
+                    <li data-view="dashboard" class="active"><i class="fas fa-chart-pie"></i> Painel</li>
+                    <li data-view="jogos"><i class="fas fa-trophy"></i> Jogos</li>
+                    <li data-view="times"><i class="fas fa-users"></i> Times</li>
+                    <li data-view="competidores"><i class="fas fa-user-ninja"></i> Competidores</li>
+                    <li data-view="confrontos"><i class="fa-solid fa-hand-fist"></i> Confrontos</li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Área principal -->
+        <main>
+            <!-- Dashboard -->
+            <section id="view-dashboard" class="view active">
+                <div class="hero" onclick="explodirConfetes(event)">
+                    <h1>Arena GamerClass</h1>
+                    <p class="subtitle">O epicentro da competição interclasses 2026.</p>
+                    <span class="hero-hint">👆 Clique aqui pra celebrar!</span>
+                </div>
+                <div class="stats-row" id="dashboard-stats"></div>
+                <h2>Próximos Grandes Confrontos</h2>
+                <div class="grid-container" id="upcoming-matches"></div>
+            </section>
+
+            <!-- Jogos -->
+            <section id="view-jogos" class="view">
+                <header>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h1>Jogos Digitais</h1>
+                            <p class="subtitle">Lista de modalidades e categorias do evento.</p>
+                        </div>
+                        <button class="btn-primary" onclick="abrirFormulario('jogo')">Novo Jogo</button>
+                    </div>
+                </header>
+                <div class="grid-container" id="list-jogos"></div>
+            </section>
+
+            <!-- Times -->
+            <section id="view-times" class="view">
+                <header>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h1>Times da Casa</h1>
+                            <p class="subtitle">Equipes formadas para a glória eterna.</p>
+                        </div>
+                        <button class="btn-primary" onclick="abrirFormulario('time')">Novo Time</button>
+                    </div>
+                </header>
+                <div class="grid-container" id="list-times"></div>
+            </section>
+
+            <!-- Competidores -->
+            <section id="view-competidores" class="view">
+                <header>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h1>Elite Competidora</h1>
+                            <p class="subtitle">Os heróis que fazem o espetáculo acontecer.</p>
+                        </div>
+                        <button class="btn-primary" onclick="abrirFormulario('competidor')">Novo Competidor</button>
+                    </div>
+                </header>
+                <div class="grid-container" id="list-competidores"></div>
+            </section>
+
+            <!-- Confrontos -->
+            <section id="view-confrontos" class="view">
+                <header>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h1>Confrontos Diretos</h1>
+                            <p class="subtitle">Acompanhe e registre os resultados épicos.</p>
+                        </div>
+                        <button class="btn-primary" onclick="abrirFormulario('confronto')">Registrar Confronto</button>
+                    </div>
+                </header>
+                <div class="grid-container" id="list-confrontos"></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal-container" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(10px); z-index:1000; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition: all 0.3s cubic-bezier(0.4,0,0.2,1);">
+        <div class="form-container" id="form-content"></div>
+    </div>
+
+    <!-- ==========================================
+         RASTRO ARCO-ÍRIS NO CURSOR
+         ========================================== -->
+    <script>
+      (function () {
+        // Cria a bolinha principal do cursor
+        const cursor = document.createElement('div');
+        cursor.className = 'rainbow-cursor';
+        document.body.appendChild(cursor);
+
+        // Cores do arco-íris
+        const coresArcoiris = [
+          '#ff0000', // vermelho
+          '#ff7f00', // laranja
+          '#ffff00', // amarelo
+          '#00ff00', // verde
+          '#00bfff', // ciano
+          '#0000ff', // azul
+          '#8a2be2', // roxo
+          '#ff00ff'  // magenta
+        ];
+
+        let corAtual = 0;
+        let ultimoX = 0;
+        let ultimoY = 0;
+
+        // Move a bolinha junto com o mouse
+        document.addEventListener('mousemove', (e) => {
+          const x = e.clientX;
+          const y = e.clientY;
+
+          // Move a bolinha principal
+          cursor.style.left = x + 'px';
+          cursor.style.top = y + 'px';
+
+          // Só cria rastro se o mouse se moveu o suficiente
+          const dist = Math.hypot(x - ultimoX, y - ultimoY);
+          if (dist > 8) {
+            criarRastro(x, y);
+            ultimoX = x;
+            ultimoY = y;
+          }
+        });
+
+        function criarRastro(x, y) {
+          const trail = document.createElement('div');
+          trail.className = 'rainbow-trail';
+
+          // Pega próxima cor do arco-íris
+          const cor = coresArcoiris[corAtual % coresArcoiris.length];
+          corAtual++;
+
+          // Tamanho aleatório pra ficar mais orgânico
+          const tamanho = 8 + Math.random() * 10;
+
+          trail.style.left = x + 'px';
+          trail.style.top = y + 'px';
+          trail.style.width = tamanho + 'px';
+          trail.style.height = tamanho + 'px';
+          trail.style.background = cor;
+          trail.style.boxShadow = `0 0 15px ${cor}, 0 0 30px ${cor}`;
+
+          document.body.appendChild(trail);
+
+          // Remove o rastro depois da animação
+          setTimeout(() => trail.remove(), 800);
+        }
+
+        // Detecta hover em elementos clicáveis (a bolinha cresce)
+        const clicaveis = 'a, button, .card, nav li, input, select, .btn-primary';
+
+        document.addEventListener('mouseover', (e) => {
+          if (e.target.closest(clicaveis)) {
+            cursor.classList.add('hovering');
+          }
+        });
+
+        document.addEventListener('mouseout', (e) => {
+          if (e.target.closest(clicaveis)) {
+            cursor.classList.remove('hovering');
+          }
+        });
+
+        // Efeito de clique — bolinha encolhe
+        document.addEventListener('mousedown', () => {
+          cursor.style.transform = 'translate(-50%, -50%) scale(0.7) rotate(0deg)';
+        });
+
+        document.addEventListener('mouseup', () => {
+          cursor.style.transform = '';
+        });
+      })();
+    </script>
+
+    <!-- ==========================================
+         CONFETES AO CLICAR NO HERO
+         ========================================== -->
+    <script>
+      (function () {
+        // Cores vivas de festa
+        const CORES = [
+          '#ff0000', '#ff7f00', '#ffff00', '#00ff00',
+          '#00bfff', '#0000ff', '#8a2be2', '#ff00ff',
+          '#ffd700', '#ff69b4', '#00ffcc', '#ff4500'
+        ];
+
+        // Formatos possíveis de confete
+        const FORMATOS = ['circle', 'square', 'triangle'];
+
+        window.explodirConfetes = function (event) {
+          // Ponto de origem: onde o mouse clicou (dentro do hero)
+          const origemX = event.clientX;
+          const origemY = event.clientY;
+
+          // 80 confetes por clique
+          const total = 80;
+
+          for (let i = 0; i < total; i++) {
+            criarConfete(origemX, origemY);
+          }
+        };
+
+        function criarConfete(x, y) {
+          const confete = document.createElement('div');
+          confete.className = 'confete';
+
+          const cor = CORES[Math.floor(Math.random() * CORES.length)];
+          const formato = FORMATOS[Math.floor(Math.random() * FORMATOS.length)];
+
+          // Tamanho aleatório
+          const tamanho = 6 + Math.random() * 8;
+
+          // Ângulo e distância da explosão
+          const angulo = Math.random() * Math.PI * 2;
+          const forca = 80 + Math.random() * 180;
+          const dx = Math.cos(angulo) * forca;
+          const dy = Math.sin(angulo) * forca - 40; // -40 pra dar uma subida
+
+          // Duração da queda
+          const duracao = 1.2 + Math.random() * 1.2;
+
+          // Aplica estilo base
+          confete.style.position = 'fixed';
+          confete.style.left = x + 'px';
+          confete.style.top = y + 'px';
+          confete.style.width = tamanho + 'px';
+          confete.style.height = tamanho + 'px';
+          confete.style.background = cor;
+          confete.style.zIndex = '99999';
+          confete.style.pointerEvents = 'none';
+          confete.style.boxShadow = `0 0 8px ${cor}`;
+
+          // Formato
+          if (formato === 'circle') {
+            confete.style.borderRadius = '50%';
+          } else if (formato === 'triangle') {
+            confete.style.width = '0';
+            confete.style.height = '0';
+            confete.style.background = 'transparent';
+            confete.style.borderLeft = `${tamanho / 2}px solid transparent`;
+            confete.style.borderRight = `${tamanho / 2}px solid transparent`;
+            confete.style.borderBottom = `${tamanho}px solid ${cor}`;
+            confete.style.boxShadow = 'none';
+          } else {
+            confete.style.borderRadius = '2px';
+          }
+
+          document.body.appendChild(confete);
+
+          // Animação via Web Animations API
+          const rotacaoFinal = (Math.random() - 0.5) * 1440; // ±720 graus
+          const quedaFinal = dy + 300 + Math.random() * 200;
+
+          confete.animate(
+            [
+              {
+                transform: 'translate(0, 0) rotate(0deg) scale(1)',
+                opacity: 1
+              },
+              {
+                transform: `translate(${dx * 0.7}px, ${dy}px) rotate(${rotacaoFinal * 0.5}deg) scale(1.1)`,
+                opacity: 1,
+                offset: 0.4
+              },
+              {
+                transform: `translate(${dx}px, ${quedaFinal}px) rotate(${rotacaoFinal}deg) scale(0.6)`,
+                opacity: 0
+              }
+            ],
+            {
+              duration: duracao * 1000,
+              easing: 'cubic-bezier(0.15, 0.65, 0.35, 1)',
+              fill: 'forwards'
+            }
+          );
+
+          // Remove depois
+          setTimeout(() => confete.remove(), duracao * 1000 + 100);
+        }
+      })();
+    </script>
+
+    <script src="service/api.js"></script>
+    <script src="controller/app.js"></script>
+</body>
+</html>

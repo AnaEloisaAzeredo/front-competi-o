@@ -1,0 +1,461 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(25px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 0, 128, 0.6); }
+  50% { box-shadow: 0 0 25px 4px rgba(0, 200, 255, 0.8); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* 🌈 VARIÁVEIS ARCO-ÍRIS GLOBAIS */
+:root {
+  --arcoiris: linear-gradient(
+    90deg,
+    #ff0000, #ff7f00, #ffff00, #00ff00,
+    #00bfff, #0000ff, #8a2be2, #ff00ff, #ff0000
+  );
+  --arcoiris-vertical: linear-gradient(
+    180deg,
+    #ff0000, #ff7f00, #ffff00, #00ff00,
+    #00bfff, #0000ff, #8a2be2, #ff00ff, #ff0000
+  );
+}
+
+@keyframes arcoirisAnim {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+@keyframes arcoirisAnimVertical {
+  0%   { background-position: 50% 0%; }
+  100% { background-position: 50% 300%; }
+}
+
+/* Grid de cards */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* ═══════════ CARD BASE ARCO-ÍRIS ═══════════ */
+.card {
+  background: var(--surface);
+  backdrop-filter: var(--card-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  animation: cardEnter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+/* Delays escalonados pra efeito cascata */
+.grid-container .card:nth-child(1)  { animation-delay: 0.05s; }
+.grid-container .card:nth-child(2)  { animation-delay: 0.10s; }
+.grid-container .card:nth-child(3)  { animation-delay: 0.15s; }
+.grid-container .card:nth-child(4)  { animation-delay: 0.20s; }
+.grid-container .card:nth-child(5)  { animation-delay: 0.25s; }
+.grid-container .card:nth-child(6)  { animation-delay: 0.30s; }
+.grid-container .card:nth-child(7)  { animation-delay: 0.35s; }
+.grid-container .card:nth-child(8)  { animation-delay: 0.40s; }
+
+/* Brilho arco-íris passando ao hover */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent 20%,
+    rgba(255, 0, 128, 0.2) 35%,
+    rgba(255, 255, 0, 0.25) 50%,
+    rgba(0, 200, 255, 0.2) 65%,
+    transparent 80%
+  );
+  transition: left 0.8s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.card:hover::before {
+  left: 100%;
+}
+
+/* Borda arco-íris animada ao hover */
+.card:hover {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--surface-hover), var(--surface-hover)) padding-box,
+    var(--arcoiris) border-box;
+  background-size: 100% 100%, 300% 100%;
+  animation: arcoirisAnim 4s linear infinite;
+  transform: translateY(-6px) scale(1.02);
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(255, 0, 128, 0.5),
+    0 0 60px rgba(0, 200, 255, 0.35);
+}
+
+.card h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  transition: var(--transition);
+  position: relative;
+  z-index: 2;
+}
+
+/* Título vira arco-íris no hover */
+.card:hover h3 {
+  background: var(--arcoiris);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: arcoirisAnim 3s linear infinite;
+  filter: drop-shadow(0 0 8px rgba(255, 0, 255, 0.5));
+}
+
+/* ═══════════ TAG ARCO-ÍRIS ═══════════ */
+.card-tag {
+  display: inline-block;
+  padding: 0.35rem 0.85rem;
+  background: var(--arcoiris);
+  background-size: 300% 100%;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  animation: arcoirisAnim 4s linear infinite;
+  box-shadow:
+    0 0 15px rgba(255, 0, 128, 0.5),
+    0 0 25px rgba(0, 200, 255, 0.3);
+  position: relative;
+  z-index: 2;
+  transition: var(--transition);
+}
+
+.card:hover .card-tag {
+  transform: scale(1.1);
+  box-shadow:
+    0 0 25px rgba(255, 0, 128, 0.8),
+    0 0 40px rgba(0, 200, 255, 0.6),
+    0 0 60px rgba(255, 255, 0, 0.4);
+}
+
+/* ═══════════ CARD DE CONFRONTO ═══════════ */
+.match-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.team-score {
+  text-align: center;
+  flex: 1;
+  transition: var(--transition);
+}
+
+.card:hover .team-score {
+  transform: scale(1.05);
+}
+
+.team-score strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  transition: var(--transition);
+}
+
+.card:hover .team-score strong {
+  background: var(--arcoiris);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: arcoirisAnim 3s linear infinite;
+}
+
+/* ═══════════ "VS" ARCO-ÍRIS PULSANTE ═══════════ */
+.vs {
+  font-weight: 900;
+  font-style: italic;
+  padding: 0.5rem 0.85rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--arcoiris);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation:
+    arcoirisAnim 2s linear infinite,
+    vsPulse 1.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 0, 255, 0.6));
+  position: relative;
+  z-index: 2;
+  font-size: 1rem;
+}
+
+@keyframes vsPulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 8px rgba(255, 0, 128, 0.5));
+  }
+  50% {
+    transform: scale(1.25);
+    filter:
+      drop-shadow(0 0 20px rgba(255, 0, 255, 0.9))
+      drop-shadow(0 0 35px rgba(0, 200, 255, 0.7));
+  }
+}
+
+/* ═══════════ SCORE ARCO-ÍRIS ═══════════ */
+.score {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0.5rem 0;
+  background: var(--arcoiris);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: arcoirisAnim 4s linear infinite;
+  filter: drop-shadow(0 0 8px rgba(255, 0, 255, 0.4));
+  transition: var(--transition);
+}
+
+.card:hover .score {
+  filter:
+    drop-shadow(0 0 15px rgba(255, 0, 255, 0.8))
+    drop-shadow(0 0 30px rgba(0, 200, 255, 0.6));
+  transform: scale(1.1);
+}
+
+/* ═══════════ MODAL ARCO-ÍRIS ═══════════ */
+.form-container {
+  background: #0f172a;
+  border: 2px solid transparent;
+  background:
+    linear-gradient(#0f172a, #0f172a) padding-box,
+    var(--arcoiris) border-box;
+  background-size: 100% 100%, 300% 100%;
+  border-radius: 24px;
+  padding: 2.5rem;
+  max-width: 600px;
+  width: 90%;
+  animation:
+    modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    arcoirisAnim 4s linear infinite;
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(255, 0, 128, 0.5),
+    0 0 80px rgba(0, 200, 255, 0.35);
+}
+
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: scale(0.85) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.form-container h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  background: var(--arcoiris);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: arcoirisAnim 3s linear infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 0, 255, 0.4));
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  background: var(--arcoiris);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: arcoirisAnim 5s linear infinite;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+}
+
+/* ═══════════ INPUTS COM FOCO ARCO-ÍRIS ═══════════ */
+input,
+select {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  color: white;
+  font-family: 'Outfit', sans-serif;
+  transition: var(--transition);
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border: 2px solid transparent;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08)) padding-box,
+    var(--arcoiris) border-box;
+  background-size: 100% 100%, 300% 100%;
+  animation: arcoirisAnim 3s linear infinite;
+  box-shadow:
+    0 0 0 4px rgba(255, 0, 128, 0.15),
+    0 0 20px rgba(0, 200, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+input[type="color"] {
+  height: 50px;
+  padding: 4px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05)) padding-box,
+    var(--arcoiris) border-box;
+  background-size: 100% 100%, 300% 100%;
+  animation: arcoirisAnim 5s linear infinite;
+}
+
+/* ═══════════ BOTÕES ARCO-ÍRIS ═══════════ */
+button {
+  cursor: pointer;
+  border-radius: 12px;
+  padding: 0.85rem 2rem;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  color: white;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--glass-border);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+button:hover::before {
+  left: 100%;
+}
+
+button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+/* 🌈 BOTÃO PRIMÁRIO ARCO-ÍRIS 🌈 */
+.btn-primary {
+  background: var(--arcoiris);
+  background-size: 300% 100%;
+  color: white;
+  border: none;
+  font-weight: 800;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  box-shadow:
+    0 4px 20px rgba(255, 0, 128, 0.5),
+    0 0 30px rgba(0, 200, 255, 0.3);
+  animation: arcoirisAnim 3s linear infinite;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-primary:hover {
+  box-shadow:
+    0 8px 30px rgba(255, 0, 128, 0.8),
+    0 0 50px rgba(0, 200, 255, 0.7),
+    0 0 80px rgba(255, 255, 0, 0.5);
+  transform: translateY(-3px) scale(1.05);
+}
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* ═══════════ BÔNUS: SCROLLBAR ARCO-ÍRIS ═══════════ */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--arcoiris-vertical);
+  background-size: 100% 300%;
+  border-radius: 10px;
+  animation: arcoirisAnimVertical 3s linear infinite;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--arcoiris-vertical);
+  background-size: 100% 300%;
+  animation: arcoirisAnimVertical 1.5s linear infinite;
+}
